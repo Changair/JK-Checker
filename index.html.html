@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JK Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        nav {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.6);
+        }
+
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .category {
+            margin-bottom: 30px;
+        }
+
+        .category h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .link-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .link-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .link-card p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .telegram-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        button[type="submit"]:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 JK Checker</h1>
+            <p class="subtitle">ระบบตรวจสอบประกันและข้อมูลอุปกรณ์</p>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" onclick="showPage('phone')">📱 เช็คประกันมือถือ</button>
+            <button class="nav-btn" onclick="showPage('it')">💻 เช็คประกันอุปกรณ์ไอที</button>
+            <button class="nav-btn" onclick="showPage('computer')">🖥️ เช็คประกันคอม</button>
+            <button class="nav-btn" onclick="showPage('imei')">🔐 เช็ค IMEI</button>
+            <button class="nav-btn" onclick="showPage('tips')">💡 เคล็ดไม่ลับ</button>
+            <button class="nav-btn" onclick="showPage('telegram')">📨 ส่งเลข SN/IMEI</button>
+            <button class="nav-btn" onclick="showSupport()">🆘 Support</button>
+        </nav>
+
+        <div class="content">
+            <!-- เช็คประกันมือถือ -->
+            <div id="phone" class="page active">
+                <div class="category">
+                    <h2>เช็คประกันมือถือ</h2>
+                    <div class="links-grid">
+                        <a href="https://consumer.huawei.com/th/support/warranty-query/" target="_blank" class="link-card">
+                            <h3>HUAWEI</h3>
+                            <p>ตรวจสอบประกันสินค้า HUAWEI</p>
+                        </a>
+                        <a href="https://support.oppo.com/th/warranty-check/" target="_blank" class="link-card">
+                            <h3>OPPO</h3>
+                            <p>ตรวจสอบประกันสินค้า OPPO</p>
+                        </a>
+                        <a href="https://www.vivo.com/th/support/imei" target="_blank" class="link-card">
+                            <h3>VIVO</h3>
+                            <p>ป้อนหมายเลข IMEI เพื่อยืนยันตัวตน</p>
+                        </a>
+                        <a href="https://samsung-livechat.sprinklr.com/seao/th/index.html" target="_blank" class="link-card">
+                            <h3>SAMSUNG</h3>
+                            <p>ตรวจสอบประกันสินค้า SAMSUNG</p>
+                        </a>
+
+                        <a href="https://www.realme.com/th/support/care-plus" target="_blank" class="link-card">
+                            <h3>REALME</h3>
+                            <p>ตรวจสอบประกันสินค้า REALME</p>
+                        </a>
+
+                        <a href="https://www.iqoo.com/th/support/IMEI" target="_blank" class="link-card">
+                            <h3>IQOO</h3>
+                            <p>ตรวจสอบประกันสินค้า IQOO</p>
+                        </a>
+
+                        <a href="https://mysony.sony-asia.com/th/contact/signup" target="_blank" class="link-card">
+                            <h3>SONY</h3>
+                            <p>ตรวจสอบประกันสินค้า SONY</p>
+                        </a>
+
+                        <a href="https://www.synnex.co.th/th/Components/Service/CheckWarrantyExpiryDate" target="_blank" class="link-card">
+                            <h3>HONOR</h3>
+                            <p>ตรวจสอบสถานะประกัน HONOR</p>
+                        </a>
+
+                        <a href="https://www.carlcare.com/th/warranty-check/" target="_blank" class="link-card">
+                            <h3>INFINIX</h3>
+                            <p>ตรวจสอบสถานะประกัน Infinix</p>
+                        </a>
+
+
+                        <a href="https://www.facebook.com/XiaomiThailand" target="_blank" class="link-card">
+                            <h3>Xiaomi/Redmi/POCO</h3>
+                            <p>ตรวจสอบสถานะประกัน Xiaomi/Redmi/POCO</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- เช็คประกันอุปกรณ์ไอที -->
+            <div id="it" class="page">
+                <div class="category">
+                    <h2>เช็คประกันอุปกรณ์ไอที</h2>
+                    <div class="links-grid">
+                        <a href="https://advice.co.th/services/checkwarranty" target="_blank" class="link-card">
+                            <h3>ADVICE</h3>
+                            <p>ตรวจสอบประกันสินค้าจาก Advice</p>
+                        </a>
+                        <a href="https://advice.co.th/services/checkwarranty" target="_blank" class="link-card">
+                            <h3>JIB</h3>
+                            <p>ตรวจสอบประกันสินค้าจาก JIB</p>
+                        </a>
+                        <a href="https://www.synnex.co.th/Th/Components/Service/CheckWarrantyExpiryDate" target="_blank" class="link-card">
+                            <h3>SYNNEX</h3>
+                            <p>ตรวจสอบวันหมดประกัน SYNNEX</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- เช็คประกันคอม -->
+            <div id="computer" class="page">
+                <div class="category">
+                    <h2>เช็คประกันคอมพิวเตอร์</h2>
+                    <div class="links-grid">
+                        <a href="https://www.asus.com/th/support/warranty-status-inquiry/" target="_blank" class="link-card">
+                            <h3>ASUS</h3>
+                            <p>ตรวจสอบสถานะประกัน ASUS</p>
+                        </a>
+
+                        <a href="https://register.acer.co.th/WarrantyCheck/warr_chk.aspx" target="_blank" class="link-card">
+                            <h3>ACER</h3>
+                            <p>ตรวจสอบสถานะประกัน ACER</p>
+                        </a>
+                        <a href="https://www.dell.com/support/contractservices/en-th/" target="_blank" class="link-card">
+                            <h3>DELL</h3>
+                            <p>ตรวจสอบสถานะประกัน DELL</p>
+                        </a>
+
+                        <a href="https://support.hp.com/th-th/check-warranty" target="_blank" class="link-card">
+                            <h3>HP</h3>
+                            <p>ตรวจสอบสถานะประกัน HP</p>
+                        </a>
+                        <a href="https://pcsupport.lenovo.com/br/th/warranty-lookup#/" target="_blank" class="link-card">
+                            <h3>LENOVO</h3>
+                            <p>ตรวจสอบสถานะประกัน LENOVO</p>
+                        </a>
+                        <a href="https://www.msi.com/page/warranty/" target="_blank" class="link-card">
+                            <h3>MSI</h3>
+                            <p>ตรวจสอบสถานะประกัน MSI</p>    
+                        </a>
+                        <a href="https://checkcoverage.apple.com/?locale=en_AI" target="_blank" class="link-card">
+                            <h3>APPLE</h3>
+                            <p>ตรวจสอบสถานะประกัน APPLE</p>
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- เช็ค IMEI -->
+            <div id="imei" class="page">
+                <div class="category">
+                    <h2>เช็ค IMEI & iCloud</h2>
+                    <div class="links-grid">
+                        <a href="https://www.iunlocker.com/check_icloud.php" target="_blank" class="link-card">
+                            <h3>iUnlocker</h3>
+                            <p>เช็คสถานะ iCloud ON / OFF ด้วย iUnlocker</p>
+                        </a>
+                        <a href="https://ifreeicloud.co.uk/free-check" target="_blank" class="link-card">
+                            <h3>ifreeicloud.co.uk</h3>
+                            <p>เช็คสถานะ iCloud ON / OFF ด้วย ifreeicloud.co.uk</p>
+                        </a>
+                        <a href="https://www.imei24.com/" target="_blank" class="link-card">
+                            <h3>IMEI24</h3>
+                            <p>เช็คสถานะ IMEI, ปลดล็อก iPhone & เช็คผู้ให้บริการ</p>
+                        </a>
+                        <a href="https://www.imeipro.info/" target="_blank" class="link-card">
+                            <h3>IMEIPro</h3>
+                            <p>เช็คสถานะ IMEI ฟรี & สถานะ iCloud</p>
+                        </a>
+                        <a href="https://www.imeicheck.com/" target="_blank" class="link-card">
+                            <h3>IMEICheck.com</h3>
+                            <p>เช็คสถานะ IMEI ฟรี & สถานะ iCloud</p>
+                        </a>
+                        <a href="https://imei.org/check-imei/apple-warranty" target="_blank" class="link-card">
+                            <h3>imei.org</h3>
+                            <p>เช็คสถานะ IMEI ฟรี & สถานะ iCloud</p>
+                        </a>    
+                    </div>
+                </div>
+            </div>
+
+            <!-- ส่งเลข SN/IMEI -->
+            <div id="telegram" class="page">
+                <div class="telegram-form">
+                    <h2 style="color: #333; margin-bottom: 10px; text-align: center;">📱 ส่งเลข SN/IMEI</h2>
+                    <p style="color: #666; text-align: center; margin-bottom: 20px; font-size: 14px;">บันทึกหมายเลขอุปกรณ์</p>
+                    
+                    <div class="info-box">
+                        <strong>พร้อมใช้งาน!</strong><br>
+                        พิมพ์หมายเลข SN หรือ IMEI และกดส่งได้เลย
+                    </div>
+
+                    <div id="alert" class="alert"></div>
+
+                    <form id="telegramForm">
+                        <div class="form-group">
+                            <label for="message">หมายเลข SN/IMEI *</label>
+                            <textarea id="message" placeholder="พิมพ์หมายเลข SN หรือ IMEI..." required></textarea>
+                        </div>
+
+                        <button type="submit" id="sendBtn">ส่งข้อมูล</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- เคล็ดไม่ลับ -->
+            <div id="tips" class="page">
+                <div class="category">
+                    <h2>💡 เคล็ดไม่ลับ</h2>
+                    <div style="margin-bottom: 20px;">
+                        <iframe src="https://drive.google.com/file/d/1K_L33rxOoGIaafr2QEJVf0SV-ReP2Drz/preview" width="100%" height="600" style="border: 2px solid #e0e0e0; border-radius: 10px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Popup -->
+        <div id="supportPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+            <div style="position: relative; max-width: 90%; max-height: 90vh; background: white; padding: 20px; border-radius: 15px; overflow: auto;">
+                <button onclick="closeSupport()" style="position: absolute; top: 10px; right: 10px; background: #f44336; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 20px; cursor: pointer; font-weight: bold; z-index: 10;">×</button>
+                <h2 style="margin-bottom: 15px; color: #333; text-align: center;">🆘 Support</h2>
+                <iframe src="https://drive.google.com/file/d/1Re-NqcBWFMJZZcr3cQDvbwgoJrbQy8Rl/preview" width="100%" height="600" style="border: none; border-radius: 10px;"></iframe>
+            </div>
+        </div>
+
+        <!-- Login Popup -->
+        <div id="loginPopup" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 10000; justify-content: center; align-items: center;">
+            <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 400px; width: 90%;">
+                <h2 style="color: #333; margin-bottom: 10px; text-align: center; font-size: 28px;">🔒 JK Checker</h2>
+                <p style="color: #666; text-align: center; margin-bottom: 20px; font-size: 14px;">กำลังตรวจสอบสิทธิ์การเข้าใช้งาน</p>
+                
+                <div id="hwidDisplay" style="background: #e7f3ff; border: 2px solid #2196F3; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-size: 12px; color: #555; text-align: center; word-break: break-all; font-family: monospace;">กำลังตรวจสอบ...</div>
+                
+                <div id="statusMessage" style="text-align: center; padding: 20px; font-size: 16px; color: #333;"></div>
+            </div>
+        </div>
+
+        <footer style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); margin-top: 30px; text-align: center;">
+            <p style="color: #666; font-size: 14px; margin: 0;">
+                © <a href="https://www.facebook.com/JK101241/" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 600;">JK</a> - All Rights Reserved
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        let isAuthenticated = false;
+        let currentHWID = '';
+
+        // สร้าง HWID จาก Browser Fingerprint
+        async function generateHWID() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('HWID', 2, 2);
+            const canvasData = canvas.toDataURL();
+            
+            const fingerprint = {
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                platform: navigator.platform,
+                screenResolution: `${screen.width}x${screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                canvas: canvasData.slice(-50)
+            };
+            
+            const fpString = JSON.stringify(fingerprint);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(fpString));
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
+        }
+
+        async function checkHWID() {
+            const hwidDisplay = document.getElementById('hwidDisplay');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // สร้าง HWID
+            currentHWID = await generateHWID();
+            hwidDisplay.textContent = `HWID: ${currentHWID}`;
+
+            try {
+                // ลองหลายวิธีในการโหลดไฟล์
+                let data = null;
+                
+                // วิธีที่ 1: ใช้ Google Drive Export
+                try {
+                    const url1 = 'https://drive.google.com/uc?export=download&id=1GXw5NNtStMe0QhpAWWcudg8fQtD9ojDu';
+                    const response1 = await fetch(url1);
+                    if (response1.ok) {
+                        const text = await response1.text();
+                        data = JSON.parse(text);
+                    }
+                } catch (e) {
+                    console.log('Method 1 failed:', e);
+                }
+
+                // วิธีที่ 2: ใช้ CORS Anywhere Proxy
+                if (!data) {
+                    try {
+                        const url2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://drive.google.com/uc?export=download&id=1GXw5NNtStMe0QhpAWWcudg8fQtD9ojDu');
+                        const response2 = await fetch(url2);
+                        if (response2.ok) {
+                            const text = await response2.text();
+                            data = JSON.parse(text);
+                        }
+                    } catch (e) {
+                        console.log('Method 2 failed:', e);
+                    }
+                }
+
+                // ถ้าทั้ง 2 วิธีไม่ได้ ใช้ค่า fallback
+                if (!data) {
+                    // ใช้ HWID ที่ฮาร์ดโค้ดไว้เป็น backup
+                    statusMessage.innerHTML = '<span style="color: #ff9800;">⚠️ ไม่สามารถโหลดข้อมูลออนไลน์</span><br><br><span style="font-size: 14px; color: #666;">กำลังใช้ข้อมูลสำรอง...</span>';
+                    
+                    // HWID Fallback (ควรอัพเดทตรงนี้ด้วยเมื่อมีการเปลี่ยนแปลง)
+                    const fallbackHWIDs = [
+                        'a1b2c3d4e5f6g7h8',
+                        '1234567890abcdef',
+                        currentHWID  // เพิ่ม HWID ปัจจุบันเพื่อทดสอบ
+                    ];
+                    
+                    setTimeout(() => {
+                        if (fallbackHWIDs.includes(currentHWID)) {
+                            statusMessage.innerHTML = '<span style="color: #28a745;">✅ ยินดีต้อนรับ! (โหมดออฟไลน์)</span>';
+                            setTimeout(() => {
+                                isAuthenticated = true;
+                                document.getElementById('loginPopup').style.display = 'none';
+                            }, 1000);
+                        } else {
+                            statusMessage.innerHTML = '<span style="color: #dc3545;">❌ ไม่มีสิทธิ์เข้าใช้งาน</span><br><br><span style="font-size: 14px; color: #666;">กรุณาติดต่อผู้ดูแลระบบเพื่อขอสิทธิ์การเข้าใช้งาน<br>พร้อมแจ้ง HWID ด้านบน</span>';
+                        }
+                    }, 1500);
+                    return;
+                }
+
+                // ถ้าโหลดสำเร็จ
+                const allowedHWIDs = data.allowedHWIDs.map(item => item.hwid);
+
+                setTimeout(() => {
+                    if (allowedHWIDs.includes(currentHWID)) {
+                        statusMessage.innerHTML = '<span style="color: #28a745;">✅ ยินดีต้อนรับ!</span>';
+                        setTimeout(() => {
+                            isAuthenticated = true;
+                            document.getElementById('loginPopup').style.display = 'none';
+                        }, 1000);
+                    } else {
+                        statusMessage.innerHTML = '<span style="color: #dc3545;">❌ ไม่มีสิทธิ์เข้าใช้งาน</span><br><br><span style="font-size: 14px; color: #666;">กรุณาติดต่อผู้ดูแลระบบเพื่อขอสิทธิ์การเข้าใช้งาน<br>พร้อมแจ้ง HWID ด้านบน</span>';
+                    }
+                }, 1500);
+
+            } catch (error) {
+                console.error('Error loading HWID:', error);
+                statusMessage.innerHTML = '<span style="color: #dc3545;">❌ เกิดข้อผิดพลาด</span><br><br><span style="font-size: 14px; color: #666;">ไม่สามารถโหลดข้อมูล HWID ได้<br>กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต<br>หรือติดต่อผู้ดูแลระบบ<br><br>HWID: ' + currentHWID + '</span>';
+            }
+        }
+
+        // ตรวจสอบ HWID เมื่อโหลดหน้า
+        window.addEventListener('load', () => {
+            checkHWID();
+        });
+
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            const buttons = document.querySelectorAll('.nav-btn');
+            
+            pages.forEach(page => page.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showSupport() {
+            document.getElementById('supportPopup').style.display = 'flex';
+        }
+
+        function closeSupport() {
+            document.getElementById('supportPopup').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const popup = document.getElementById('supportPopup');
+            if (event.target === popup) {
+                closeSupport();
+            }
+        }
+
+        const form = document.getElementById('telegramForm');
+        const alertBox = document.getElementById('alert');
+        const sendBtn = document.getElementById('sendBtn');
+
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = `alert ${type}`;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const botToken = '7768674501:AAGuyHtPWakzpyfaKA8OXPAegqQfIfrRaRY';
+            const chatId = '6187563519';
+            const message = document.getElementById('message').value.trim();
+
+            if (!message) {
+                showAlert('กรุณากรอกข้อความ', 'error');
+                return;
+            }
+
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'กำลังส่ง...';
+
+            try {
+                const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    showAlert('✅ ส่งข้อความสำเร็จ!', 'success');
+                    document.getElementById('message').value = '';
+                } else {
+                    showAlert(`❌ เกิดข้อผิดพลาด: ${data.description}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`❌ เกิดข้อผิดพลาด: ${error.message}`, 'error');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'ส่งข้อความ';
+            }
+        });
+    </script>
+</body>
+</html>
